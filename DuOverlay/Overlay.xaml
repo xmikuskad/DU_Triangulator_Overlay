@@ -1,0 +1,33 @@
+﻿<Window x:Class="DuOverlay.Overlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Window1"
+        Height="300"
+        Width="300"
+        ShowInTaskbar="False"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="{x:Null}"
+        Topmost="True">
+    <Grid>
+        <Button Content="Button"
+                HorizontalAlignment="Left"
+                Margin="11,26,0,0"
+                VerticalAlignment="Top"
+                Width="150" Click="Button_Click" Height="149" />
+        <Label x:Name="MyLabel"
+            Content="Label"
+               HorizontalAlignment="Left"
+               Margin="179,56,0,0"
+               VerticalAlignment="Top" FontSize="20" Height="53" Width="96" FontStyle="Normal" Foreground="Red" />
+        <TextBox x:Name="MyBox"
+            HorizontalAlignment="Left"
+                 Height="23"
+                 Margin="101,201,0,0"
+                 TextWrapping="Wrap"
+                 Text="Name pls"
+                 VerticalAlignment="Top"
+                 Width="120" />
+
+    </Grid>
+</Window>
