@@ -6,4 +6,33 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\appIcon.png" />
+    <None Remove="Resources\image.png" />
+    <None Remove="Resources\imgIcon.png" />
+    <None Remove="Resources\readerFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\appIcon.png" />
+    <Resource Include="Resources\image.png" />
+    <Resource Include="Resources\imgIcon.png" />
+    <Resource Include="Resources\readerFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

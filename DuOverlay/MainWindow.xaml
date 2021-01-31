@@ -5,9 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DuOverlay"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="309,118,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        ResizeMode="NoResize" SizeToContent="WidthAndHeight"
+        Title="MainWindow">
+    <DockPanel  Height="730" Width="620">
+        <Menu DockPanel.Dock="Top" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <MenuItem Header="_Settings" FontSize="15" Height="25"></MenuItem>
+            <MenuItem Header="_Help" FontSize="15" Height="25"></MenuItem>
+            <MenuItem Header="_About" FontSize="15" Height="25"></MenuItem>
+        </Menu>
+        <Canvas>
+            <Button x:Name="Btn1" Content="Overlay" Click="activateOverlay" Height="28" Width="55" Canvas.Left="565"/>
 
-    </Grid>
+            <!-- Left side -->
+            <Label Content="Position 1" FontSize="25" Height="50" Canvas.Left="45" Canvas.Top="50" Width="250"/>
+            <TextBox x:Name="field1" GotFocus="removePosPlaceholder" LostFocus="addPosPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="250" FontSize="20" ToolTip="" Height="40" TextAlignment="Left" Canvas.Left="50" Canvas.Top="100"/>
+            <Label Content="Position 2" FontSize="25" Height="50" Canvas.Left="45" Canvas.Top="150" Width="250"/>
+            <TextBox x:Name="field2" GotFocus="removePosPlaceholder" LostFocus="addPosPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="250" FontSize="20" ToolTip="" Height="40" TextAlignment="Left" Canvas.Left="50" Canvas.Top="200"/>
+            <Label Content="Position 3" FontSize="25" Height="50" Canvas.Left="45" Canvas.Top="250" Width="250"/>
+            <TextBox x:Name="field3" GotFocus="removePosPlaceholder" LostFocus="addPosPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="250" FontSize="20" ToolTip="" Height="40" TextAlignment="Left" Canvas.Left="50" Canvas.Top="300"/>
+            <Label Content="Position 4" FontSize="25" Height="50" Canvas.Left="45" Canvas.Top="350" Width="250"/>
+            <TextBox x:Name="field4" GotFocus="removePosPlaceholder" LostFocus="addPosPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="250" FontSize="20" ToolTip="" Height="40" TextAlignment="Left" Canvas.Left="50" Canvas.Top="400"/>
+
+            <!--  Middle side -->
+            <Button x:Name="screenBtn1" Tag="1" Click="calculateDistanceImage" Canvas.Left="320" Canvas.Top="100" Height="40" Width="40">
+                <Image Source="Resources/imgIcon.png"/>
+            </Button>
+            <Button x:Name="screenBtn2" Tag="2" Click="calculateDistanceImage" Canvas.Left="320" Canvas.Top="200" Height="40" Width="40">
+                <Image Source="Resources/imgIcon.png"/>
+            </Button>
+            <Button x:Name="screenBtn3" Tag="3" Click="calculateDistanceImage" Canvas.Left="320" Canvas.Top="300" Height="40" Width="40">
+                <Image Source="Resources/imgIcon.png"/>
+            </Button>
+            <Button x:Name="screenBtn4" Tag="4" Click="calculateDistanceImage" Canvas.Left="320" Canvas.Top="400" Height="40" Width="40">
+                <Image Source="Resources/imgIcon.png"/>
+            </Button>
+
+            <Button x:Name="getOre" Click="calculateOrePos" Height="40" Width="220" Content="Get ore position" Canvas.Left="200" Canvas.Top="480" FontSize="23"/>
+            <Label x:Name="clipboardText" Visibility="Hidden" HorizontalContentAlignment="Center" FontStyle="Italic" Content="Ore position copied to clipboard" FontSize="14" Height="30" Canvas.Left="200" Canvas.Top="530" Width="220"/>
+
+            <Label Content="Ore position" FontSize="25" Height="50" Canvas.Left="80" Canvas.Top="580" Width="150"/>
+            <TextBox x:Name="resultBox"  VerticalContentAlignment="Center" TextWrapping="Wrap" Width="250" FontSize="20" ToolTip="" Text="" Height="40" TextAlignment="Left" Canvas.Left="290" Canvas.Top="585"/>
+
+            <Button x:Name="clear" Click="clearAllFields" Height="30" Width="120" Content="Clear all fields" Canvas.Left="450" Canvas.Top="650" FontSize="15"/>
+
+            <!-- Right side -->
+            <Label Content="Ore distance" FontSize="25" Height="50" Canvas.Left="375" Canvas.Top="50" Width="250"/>
+            <TextBox x:Name="dist1" GotFocus="removeDistPlaceholder" LostFocus="addDistPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="100" FontSize="20" ToolTip="" Text="" Height="40" TextAlignment="Left" Canvas.Left="380" Canvas.Top="100"/>
+            <Label Content="Ore distance" FontSize="25" Height="50" Canvas.Left="375" Canvas.Top="150" Width="250"/>
+            <TextBox x:Name="dist2" GotFocus="removeDistPlaceholder" LostFocus="addDistPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="100" FontSize="20" ToolTip="" Text="" Height="40" TextAlignment="Left" Canvas.Left="380" Canvas.Top="200"/>
+            <Label Content="Ore distance" FontSize="25" Height="50" Canvas.Left="375" Canvas.Top="250" Width="250"/>
+            <TextBox x:Name="dist3" GotFocus="removeDistPlaceholder" LostFocus="addDistPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="100" FontSize="20" ToolTip="" Text="" Height="40" TextAlignment="Left" Canvas.Left="380" Canvas.Top="300"/>
+            <Label Content="Ore distance" FontSize="25" Height="50" Canvas.Left="375" Canvas.Top="350" Width="250"/>
+            <TextBox x:Name="dist4" GotFocus="removeDistPlaceholder" LostFocus="addDistPlaceholder" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="100" FontSize="20" ToolTip="" Text="" Height="40" TextAlignment="Left" Canvas.Left="380" Canvas.Top="400"/>
+
+            <Button x:Name="clearBtn1" Tag="1" Click="clearField" Canvas.Left="530" Canvas.Top="100" Height="40" Width="40">
+                <Image Source="Resources/image.png"/>
+            </Button>
+            <Button x:Name="clearBtn2" Tag="2" Click="clearField" Canvas.Left="530" Canvas.Top="200" Height="40" Width="40">
+                <Image Source="Resources/image.png"/>
+            </Button>
+            <Button x:Name="clearBtn3" Tag="3" Click="clearField" Canvas.Left="530" Canvas.Top="300" Height="40" Width="40">
+                <Image Source="Resources/image.png"/>
+            </Button>
+            <Button x:Name="clearBtn4" Tag="4" Click="clearField" Canvas.Left="530" Canvas.Top="400" Height="40" Width="40">
+                <Image Source="Resources/image.png"/>
+            </Button>
+
+        </Canvas>
+    </DockPanel>
 </Window>
