@@ -158,9 +158,8 @@ namespace DuOverlay
 			}
 
 			int finalHeight = baseHeight - heightTracker;
-			double finalAmount = 0;
 			double stepper = 172.0 / 2160.0 * height;
-			finalAmount = (100.0 / stepper) * finalHeight;
+			double finalAmount = (100.0 / stepper) * finalHeight;
 
 
 			if (finalAmount < 10)
@@ -168,6 +167,8 @@ namespace DuOverlay
 				MessageBox.Show("Scanner lines not found! Check instructions!","ERROR!", MessageBoxButton.OK,MessageBoxImage.Error);
 				finalAmount = 0;
 			}
+
+			finalAmount = Math.Round(finalAmount, 2);
 
 			return finalAmount;
 		}

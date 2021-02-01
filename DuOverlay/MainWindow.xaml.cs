@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DuOverlay
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         Overlay overlay;
@@ -28,17 +20,21 @@ namespace DuOverlay
         const string POS_PLACEHOLDER = "::pos{0,a,x,y,z}";
         const string DIST_PLACEHOLDER = "200.11...";
 
-        bool test = true;
         public MainWindow()
         {
             InitializeComponent();
 
+            //Used to change , to . in decimal numbers
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+
+            //Initialize variables
             solver = new Solver();
             imageProcessing = new ImageProcessing();
 
+            //Setup placeholder text
             clearAllFields(null,null);
 
-            //To close the process
+            //Disable hooks when closing app
             this.Closed += (sender, e) =>
             {
                 if(keyboardHook!=null)
@@ -48,6 +44,7 @@ namespace DuOverlay
             };
         }
 
+        //Called when textfield GotFocus gets fired
         public void removePosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -58,6 +55,7 @@ namespace DuOverlay
             }
         }
 
+        //Called when textfield LostFocus gets fired
         public void addPosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -68,6 +66,7 @@ namespace DuOverlay
             }
         }
 
+        //Called when textfield GotFocus gets fired
         public void removeDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -78,6 +77,7 @@ namespace DuOverlay
             }
         }
 
+        //Called when textfield LostFocus gets fired
         public void addDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -88,6 +88,7 @@ namespace DuOverlay
             }
         }
 
+        //Opens overlay
         private void activateOverlay(object sender, RoutedEventArgs e)
         {
             if (keyboardHook == null)
@@ -96,7 +97,7 @@ namespace DuOverlay
             if (overlay == null)
                 overlay = new Overlay(keyboardHook);
 
-            if (test)
+            if (overlayMenu.IsChecked)
             {
                 overlay.Show();
             }
@@ -104,19 +105,10 @@ namespace DuOverlay
             {
                 overlay.Hide();
             }
-
-            test = !test;
-        }
-
-        public void testBtn(object sender, RoutedEventArgs e)
-        {
-            var btn = sender as Button;
-            MessageBox.Show(btn.Tag.ToString());
         }
 
         public void calculateDistanceImage(object sender, RoutedEventArgs e)
         {
-
             if (Clipboard.ContainsImage())
             {
                 BitmapSource image = Clipboard.GetImage();
@@ -206,20 +198,29 @@ namespace DuOverlay
 
         public void hideClipMsg()
         {
-            Console.WriteLine("Hiding clipboard msg");
             clipboardText.Visibility = Visibility.Hidden;
         }
 
         public void showClipMsg()
         {
-            Console.WriteLine("Showing clipboard msg");
             clipboardText.Visibility = Visibility.Visible;
         }
 
         public void setResult(String result)
         {
-            Console.WriteLine("Result is "+result);
             resultBox.Text = result;
+        }
+
+        public void openHelp(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start("notepad.exe", "help.txt");
+            }
+            catch(Exception)
+            {
+                MessageBox.Show("Couldn`t open help! Check file help.txt in application folder.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

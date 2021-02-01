@@ -11,7 +11,7 @@ namespace DuOverlay
 	{
 		private const int FIELD_COUNT = 4;
 		private StreamWriter writer;
-		private StreamReader reader;
+		private string reader;
 		private const string fileName = "log.txt";
 		private const string readerFileName = "resources/readerFile.txt";
 
@@ -46,14 +46,14 @@ namespace DuOverlay
 			//Opening reader file
 			try
 			{
-				reader = new StreamReader(readerFileName);
+				reader = Properties.Resources.readerFile.ToString();
 			}
 			catch (Exception e2)
 			{
-				MessageBox.Show(e2.ToString(), "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-				con.setResult("File reading failed");
+				Debug.WriteLine(e2.ToString(), "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				con.hideClipMsg();
-				writeToFile("ERROR!", "Cannot open fileReader.txt");
+				writeToFile("ERROR!", "Cannot find fileReader.txt");
+				MessageBox.Show("Cannot find fileReader.txt", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -84,7 +84,7 @@ namespace DuOverlay
 			//Making calculations
 			try
 			{
-				prepare(); //OK
+				prepare();
 
 				makeCalculations();
 
@@ -235,13 +235,13 @@ namespace DuOverlay
 
 			double getRValue(String value1, String value2)
 			{
-				List<String> list = new List<String>();
+				List<String> list = new List<String>(reader.Split("\n"));
 				String tmp;
 
-				while ((tmp = reader.ReadLine()) != null)
+				/*while ((tmp = reader.ReadLine()) != null)
 				{
 					list.Add(tmp);
-				}
+				}*/
 
 				double value = -1;
 
@@ -282,16 +282,15 @@ namespace DuOverlay
 						throw new Exception("Ore distance " + (i + 1) + " is empty!");
 					}
 
-
 					//Get inputs from string
-					List<String> tmp = new List<String>(pos.Split("\\{"));
+					List<String> tmp = new List<String>(pos.Split("{"));
 
 					if (tmp.Count <= 1)
 					{
 						throw new Exception("Position " + (i + 1) + " is badly formatted!");
 					}
 
-					String positionsRaw = tmp[1].Split("\\}")[0];
+					String positionsRaw = tmp[1].Split("}")[0];
 
 					List<String> tmpList = new List<String>(positionsRaw.Split(","));
 
@@ -329,7 +328,7 @@ namespace DuOverlay
 						if (R < 0)
 						{
 							R = 120000;
-							MessageBox.Show("Calculations for this planet may be inaccurate!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Information);
+							MessageBox.Show("Calculations for this planet may be inaccurate!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
 						}
 					}
 				}

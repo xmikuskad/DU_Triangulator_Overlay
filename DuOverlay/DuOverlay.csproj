@@ -4,6 +4,19 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <PackageIcon>appIcon.png</PackageIcon>
+    <Authors>FalconSocka, Ax3lino</Authors>
+    <PackageProjectUrl>https://github.com/xmikuskad/DU_Triangulator_Overlay</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/xmikuskad/DU_Triangulator_Overlay</RepositoryUrl>
+    <ApplicationIcon>appIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath></OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +24,10 @@
     <None Remove="Resources\image.png" />
     <None Remove="Resources\imgIcon.png" />
     <None Remove="Resources\readerFile.txt" />
+    <None Include="Resources\appIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
