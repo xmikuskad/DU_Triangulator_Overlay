@@ -13,7 +13,6 @@ namespace DuOverlay
 		private StreamWriter writer;
 		private string reader;
 		private const string fileName = "log.txt";
-		private const string readerFileName = "resources/readerFile.txt";
 
 		private List<List<Double>> positions = new List<List<Double>>();
 		private List<Double> other = new List<Double>();
@@ -266,11 +265,12 @@ namespace DuOverlay
             {
                 for (int i = 0; i < FIELD_COUNT; i++)
 				{
-
 					positions.Add(new List<Double>());
 
 					String pos = varList[i * 2];
 					String otherVar = varList[i * 2 + 1];
+
+					writeToFile(pos, otherVar);
 
 					if (string.IsNullOrEmpty(pos))
 					{

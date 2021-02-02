@@ -28,7 +28,6 @@ namespace DuOverlay
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             //Initialize variables
-            solver = new Solver();
             imageProcessing = new ImageProcessing();
 
             //Setup placeholder text
@@ -118,19 +117,19 @@ namespace DuOverlay
 
                 if (code.Equals("1"))
                 {
-                    dist1.Text = imageProcessing.GetOreDistance(image).ToString();
+                    changeOreDistText(dist1, image);
                 }
                 if (code.Equals("2"))
                 {
-                    dist2.Text = imageProcessing.GetOreDistance(image).ToString();
+                    changeOreDistText(dist2, image);
                 }
                 if (code.Equals("3"))
                 {
-                    dist3.Text = imageProcessing.GetOreDistance(image).ToString();
+                    changeOreDistText(dist3, image);
                 }
                 if (code.Equals("4"))
                 {
-                    dist4.Text = imageProcessing.GetOreDistance(image).ToString();
+                    changeOreDistText(dist4, image);
                 }
             }
             else
@@ -139,17 +138,25 @@ namespace DuOverlay
             }
         }
 
+        public void changeOreDistText(TextBox tb,BitmapSource image)
+        {
+            removeDistPlaceholder(tb, null);
+            tb.Text = imageProcessing.getOreDistance(image).ToString();
+            addDistPlaceholder(tb, null);
+        }
+
         public void calculateOrePos(object sender, RoutedEventArgs e)
         {
+            solver = new Solver();
             List<String> varList = new List<String>();
             varList.Add(field1.Text);
             varList.Add(dist1.Text);
             varList.Add(field2.Text);
-            varList.Add(dist1.Text);
+            varList.Add(dist2.Text);
             varList.Add(field3.Text);
-            varList.Add(dist1.Text);
+            varList.Add(dist3.Text);
             varList.Add(field4.Text);
-            varList.Add(dist1.Text);
+            varList.Add(dist4.Text);
 
             solver.startSolve(varList, this);
         }
@@ -209,6 +216,7 @@ namespace DuOverlay
         public void setResult(String result)
         {
             resultBox.Text = result;
+            MessageBox.Show(result);
         }
 
         public void openHelp(object sender, RoutedEventArgs e)

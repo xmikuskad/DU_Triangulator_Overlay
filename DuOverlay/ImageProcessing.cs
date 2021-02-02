@@ -66,7 +66,7 @@ namespace DuOverlay
 			}
 		}
 
-		private int GetFinalPos(int heightTracker, BitmapSource image, int baseWidth)
+		private int getFinalPos(int heightTracker, BitmapSource image, int baseWidth)
 		{
 
 			int count = 0;
@@ -112,7 +112,20 @@ namespace DuOverlay
 			return color;
 		}
 
-		public double GetOreDistance(BitmapSource image)
+		public bool isOreRange(Color color1, Color color2)
+        {
+			int red = color1.R + color2.R;
+			int blue = color1.B + color2.B;
+			int green = color1.G + color2.G;
+
+			if(red > 141 && red < 283 && blue >142 && blue <403 && green > 142 && green <345)
+            {
+				return true;
+            }
+			return false;
+        }
+
+		public double getOreDistance(BitmapSource image)
 		{
 			//16:9
 			double ratioX = 2843.0 / 3840.0;
@@ -142,10 +155,9 @@ namespace DuOverlay
 				Color color = getColor(image,baseWidth, heightTracker);
 				Color nextColor = getColor(image,baseWidth, heightTracker - 1);
 
-				double blue = color.B + nextColor.B;
-				if (blue > 388)
+				if (isOreRange(color,nextColor))
 				{
-					int count = GetFinalPos(heightTracker, image, baseWidth);
+					int count = getFinalPos(heightTracker, image, baseWidth);
 
 					if (count > 3)
 					{
@@ -162,13 +174,13 @@ namespace DuOverlay
 			double finalAmount = (100.0 / stepper) * finalHeight;
 
 
-			if (finalAmount < 10)
+			if (finalAmount < 10 || finalAmount > 674)
 			{
 				MessageBox.Show("Scanner lines not found! Check instructions!","ERROR!", MessageBoxButton.OK,MessageBoxImage.Error);
 				finalAmount = 0;
 			}
 
-			finalAmount = Math.Round(finalAmount, 2);
+			finalAmount = Math.Round(finalAmount, 5);
 
 			return finalAmount;
 		}
