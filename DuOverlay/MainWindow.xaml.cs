@@ -47,10 +47,10 @@ namespace DuOverlay
         public void removePosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
+            tb.Foreground = Brushes.Black;
             if (tb.Text.Equals(POS_PLACEHOLDER))
             {
                 tb.Text = "";
-                tb.Foreground = Brushes.Black;
             }
         }
 
@@ -69,10 +69,10 @@ namespace DuOverlay
         public void removeDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
-            if (tb.Text.Equals(DIST_PLACEHOLDER))
+            tb.Foreground = Brushes.Black;
+            if (tb.Text.Contains(DIST_PLACEHOLDER))
             {
                 tb.Text = "";
-                tb.Foreground = Brushes.Black;
             }
         }
 
@@ -94,7 +94,7 @@ namespace DuOverlay
                 keyboardHook = new KeyboardHook();
 
             if (overlay == null)
-                overlay = new Overlay(keyboardHook);
+                overlay = new Overlay(keyboardHook,this);
 
             if (overlayMenu.IsChecked)
             {
@@ -104,6 +104,72 @@ namespace DuOverlay
             {
                 overlay.Hide();
             }
+        }
+
+        //For overlay
+        public bool setFieldText(int number)
+        {
+            string text = Clipboard.GetText();
+            if(string.IsNullOrEmpty(text) || !text.Contains("::pos{"))
+            {
+                return false;
+            }
+
+            switch (number)
+            {
+                case 1:
+                    removePosPlaceholder(field1, null);
+                    field1.Text = text;
+                    return true;
+                case 2:
+                    removePosPlaceholder(field2, null);
+                    field2.Text = text;
+                    return true;
+                case 3:
+                    removePosPlaceholder(field3, null);
+                    field3.Text = text;
+                    return true;
+                case 4:
+                    removePosPlaceholder(field4, null);
+                    field4.Text = text;
+                    return true;
+            }
+
+            return false;
+        }
+
+        //For overlay
+        public bool setDistance(int number)
+        {
+            if (Clipboard.ContainsImage())
+            {
+                BitmapSource image = Clipboard.GetImage();
+
+                switch (number)
+                {
+                    case 1:
+                        changeOreDistText(dist1, image, false);
+                        if (Double.Parse(dist1.Text) < 10)
+                            return false;
+                        return true;
+                    case 2:
+                        changeOreDistText(dist2, image, false);
+                        if (Double.Parse(dist2.Text) < 10)
+                            return false;
+                        return true;
+                    case 3:
+                        changeOreDistText(dist3, image, false);
+                        if (Double.Parse(dist3.Text) < 10)
+                            return false;
+                        return true;
+                    case 4:
+                        changeOreDistText(dist4, image, false);
+                        if (Double.Parse(dist4.Text) < 10)
+                            return false;
+                        return true;
+                }
+            }
+            return false;
         }
 
         public void calculateDistanceImage(object sender, RoutedEventArgs e)
@@ -117,19 +183,19 @@ namespace DuOverlay
 
                 if (code.Equals("1"))
                 {
-                    changeOreDistText(dist1, image);
+                    changeOreDistText(dist1, image, true);
                 }
                 if (code.Equals("2"))
                 {
-                    changeOreDistText(dist2, image);
+                    changeOreDistText(dist2, image, true);
                 }
                 if (code.Equals("3"))
                 {
-                    changeOreDistText(dist3, image);
+                    changeOreDistText(dist3, image, true);
                 }
                 if (code.Equals("4"))
                 {
-                    changeOreDistText(dist4, image);
+                    changeOreDistText(dist4, image, true);
                 }
             }
             else
@@ -138,10 +204,10 @@ namespace DuOverlay
             }
         }
 
-        public void changeOreDistText(TextBox tb,BitmapSource image)
+        public void changeOreDistText(TextBox tb,BitmapSource image, bool showWarning)
         {
             removeDistPlaceholder(tb, null);
-            tb.Text = imageProcessing.getOreDistance(image).ToString();
+            tb.Text = imageProcessing.getOreDistance(image,showWarning).ToString();
             addDistPlaceholder(tb, null);
         }
 
@@ -158,7 +224,14 @@ namespace DuOverlay
             varList.Add(field4.Text);
             varList.Add(dist4.Text);
 
-            solver.startSolve(varList, this);
+            if (sender != null)
+            {
+                solver.startSolve(varList, this, true);
+            }
+            else
+            {
+                solver.startSolve(varList, this, false);
+            }
         }
 
         public void clearField(object sender, RoutedEventArgs e)
@@ -195,12 +268,15 @@ namespace DuOverlay
             dist.Foreground = Brushes.Gray;
         }
 
+        public string getResultText() { return resultBox.Text; }
+
         public void clearAllFields(object sender, RoutedEventArgs e)
         {
             resetField(field1, dist1);
             resetField(field2, dist2);
             resetField(field3, dist3);
             resetField(field4, dist4);
+            resultBox.Text = "";
         }
 
         public void hideClipMsg()
@@ -216,7 +292,6 @@ namespace DuOverlay
         public void setResult(String result)
         {
             resultBox.Text = result;
-            MessageBox.Show(result);
         }
 
         public void openHelp(object sender, RoutedEventArgs e)

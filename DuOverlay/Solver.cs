@@ -25,9 +25,12 @@ namespace DuOverlay
 
 		private double x1, y1, z1, a, b, c, R;
 
+		bool showWarnings = true;
+
 		//Main function
-		public void startSolve(List<String> varList, MainWindow con)
+		public void startSolve(List<String> varList, MainWindow con, bool showWarnings)
 		{
+			showWarnings = false;
 			//Logging
 			try
 			{
@@ -52,7 +55,8 @@ namespace DuOverlay
 				Debug.WriteLine(e2.ToString(), "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				con.hideClipMsg();
 				writeToFile("ERROR!", "Cannot find fileReader.txt");
-				MessageBox.Show("Cannot find fileReader.txt", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+				if(showWarnings)
+					MessageBox.Show("Cannot find fileReader.txt", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -64,7 +68,8 @@ namespace DuOverlay
 			catch (Exception e)
 			{
 				con.setResult("");
-				MessageBox.Show("Input problem!\nProblem: " + e.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+				if(showWarnings)
+					MessageBox.Show("Input problem!\nProblem: " + e.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				con.hideClipMsg();
 				writeToFile("ERROR!", "Input problem! MSG: " + e.ToString());
 
@@ -93,7 +98,8 @@ namespace DuOverlay
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Calculation problem!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+				if(showWarnings)
+					MessageBox.Show("Calculation problem!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 				con.setResult("");
 				con.hideClipMsg();
 				writeToFile("ERROR", "Calculation problem! " + e.ToString());
@@ -328,7 +334,8 @@ namespace DuOverlay
 						if (R < 0)
 						{
 							R = 120000;
-							MessageBox.Show("Calculations for this planet may be inaccurate!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
+							if(showWarnings)
+								MessageBox.Show("Calculations for this planet may be inaccurate!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
 						}
 					}
 				}
@@ -401,7 +408,8 @@ namespace DuOverlay
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show(e.ToString());
+					if(showWarnings)
+						MessageBox.Show(e.ToString());
 				}
 			}
 

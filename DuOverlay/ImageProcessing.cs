@@ -11,7 +11,6 @@ namespace DuOverlay
 {
     class ImageProcessing
     {
-
 		private const String FULLSCREEN = "Fullscreen";
 		private const String WINDOWED = "Windowed";
 
@@ -77,10 +76,9 @@ namespace DuOverlay
 				Color color = getColor(image,baseWidth, heightTracker);
 				Color nextColor = getColor(image,baseWidth, heightTracker - 1);
 
-				double blue = color.B + nextColor.B;
-				if (blue < 388)
+				if (!isOreRange(color,nextColor))
 				{
-					Console.WriteLine("Count: " + count);
+					Debug.WriteLine("Count: " + count);
 					return count;
 				}
 			}
@@ -120,12 +118,12 @@ namespace DuOverlay
 
 			if(red > 141 && red < 283 && blue >142 && blue <403 && green > 142 && green <345)
             {
-				return true;
+				return false;
             }
-			return false;
+			return true;
         }
 
-		public double getOreDistance(BitmapSource image)
+		public double getOreDistance(BitmapSource image, bool showWarning)
 		{
 			//16:9
 			double ratioX = 2843.0 / 3840.0;
@@ -176,7 +174,8 @@ namespace DuOverlay
 
 			if (finalAmount < 10 || finalAmount > 674)
 			{
-				MessageBox.Show("Scanner lines not found! Check instructions!","ERROR!", MessageBoxButton.OK,MessageBoxImage.Error);
+				if(showWarning)
+					MessageBox.Show("Scanner lines not found! Check instructions!","ERROR!", MessageBoxButton.OK,MessageBoxImage.Error);
 				finalAmount = 0;
 			}
 
