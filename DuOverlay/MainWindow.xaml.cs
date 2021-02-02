@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,7 +49,7 @@ namespace DuOverlay
         public void removePosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
-            tb.Foreground = Brushes.Black;
+            tb.Foreground = System.Windows.Media.Brushes.Black;
             if (tb.Text.Equals(POS_PLACEHOLDER))
             {
                 tb.Text = "";
@@ -61,7 +63,7 @@ namespace DuOverlay
             if (string.IsNullOrWhiteSpace(tb.Text))
             {
                 tb.Text = POS_PLACEHOLDER;
-                tb.Foreground = Brushes.Gray;
+                tb.Foreground = System.Windows.Media.Brushes.Gray;
             }
         }
 
@@ -69,7 +71,7 @@ namespace DuOverlay
         public void removeDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
-            tb.Foreground = Brushes.Black;
+            tb.Foreground = System.Windows.Media.Brushes.Black;
             if (tb.Text.Contains(DIST_PLACEHOLDER))
             {
                 tb.Text = "";
@@ -83,7 +85,7 @@ namespace DuOverlay
             if (string.IsNullOrWhiteSpace(tb.Text))
             {
                 tb.Text = DIST_PLACEHOLDER;
-                tb.Foreground = Brushes.Gray;
+                tb.Foreground = System.Windows.Media.Brushes.Gray;
             }
         }
 
@@ -141,9 +143,13 @@ namespace DuOverlay
         //For overlay
         public bool setDistance(int number)
         {
-            if (Clipboard.ContainsImage())
+            Bitmap image = new Bitmap((int)Math.Floor(SystemParameters.PrimaryScreenWidth), (int)Math.Floor(SystemParameters.PrimaryScreenHeight));
+            Graphics graphics = Graphics.FromImage(image as System.Drawing.Image);
+            graphics.CopyFromScreen(0, 0, 0, 0, image.Size);
+
+            /*if (Clipboard.ContainsImage())
             {
-                BitmapSource image = Clipboard.GetImage();
+                BitmapSource image = Clipboard.GetImage();*/
 
                 switch (number)
                 {
@@ -168,43 +174,66 @@ namespace DuOverlay
                             return false;
                         return true;
                 }
-            }
+            //}
             return false;
         }
 
         public void calculateDistanceImage(object sender, RoutedEventArgs e)
         {
-            if (Clipboard.ContainsImage())
-            {
-                BitmapSource image = Clipboard.GetImage();
+            /*if (Clipboard.ContainsImage())
+            {*/
+            //BitmapSource source = Clipboard.GetImage();
 
-                var btn = sender as Button;
-                String code = btn.Tag.ToString();
+            Bitmap image = new Bitmap((int)Math.Floor(SystemParameters.PrimaryScreenWidth), (int)Math.Floor(SystemParameters.PrimaryScreenHeight));
+            Graphics graphics = Graphics.FromImage(image as System.Drawing.Image);
+            graphics.CopyFromScreen(0, 0, 0, 0, image.Size);
+            /*SaveControlImage(printscreen);
 
-                if (code.Equals("1"))
-                {
-                    changeOreDistText(dist1, image, true);
-                }
-                if (code.Equals("2"))
-                {
-                    changeOreDistText(dist2, image, true);
-                }
-                if (code.Equals("3"))
-                {
-                    changeOreDistText(dist3, image, true);
-                }
-                if (code.Equals("4"))
-                {
-                    changeOreDistText(dist4, image, true);
-                }
-            }
-            else
+            BitmapSource image = new BitmapImage(new Uri(@".\image.bmp"));*/
+            var btn = sender as Button;
+            String code = btn.Tag.ToString();
+
+            if (code.Equals("1"))
             {
-                MessageBox.Show("No screenshot in clipboard!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                changeOreDistText(dist1, image, true);
             }
+            if (code.Equals("2"))
+            {
+                changeOreDistText(dist2, image, true);
+            }
+            if (code.Equals("3"))
+            {
+                changeOreDistText(dist3, image, true);
+            }
+            if (code.Equals("4"))
+            {
+                changeOreDistText(dist4, image, true);
+            }
+            /* }
+             else
+             {
+                 MessageBox.Show("No screenshot in clipboard!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+             }*/
         }
 
-        public void changeOreDistText(TextBox tb,BitmapSource image, bool showWarning)
+        public BitmapSource convertToSource(Bitmap bitmap)
+        {
+            var bitmapData = bitmap.LockBits(
+                new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+
+            var bitmapSource = BitmapSource.Create(
+                bitmapData.Width, bitmapData.Height,
+                bitmap.HorizontalResolution, bitmap.VerticalResolution,
+                PixelFormats.Bgra32, null,
+                bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
+
+            bitmap.UnlockBits(bitmapData);
+
+            return bitmapSource;
+        }
+
+        public void changeOreDistText(TextBox tb,Bitmap image, bool showWarning)
         {
             removeDistPlaceholder(tb, null);
             tb.Text = imageProcessing.getOreDistance(image,showWarning).ToString();
@@ -224,7 +253,7 @@ namespace DuOverlay
             varList.Add(field4.Text);
             varList.Add(dist4.Text);
 
-            if (sender != null)
+            if (sender!= null)
             {
                 solver.startSolve(varList, this, true);
             }
@@ -261,11 +290,11 @@ namespace DuOverlay
         {
             field.Text = "";
             field.Text = POS_PLACEHOLDER;
-            field.Foreground = Brushes.Gray;
+            field.Foreground = System.Windows.Media.Brushes.Gray;
 
             dist.Text = "";
             dist.Text = DIST_PLACEHOLDER;
-            dist.Foreground = Brushes.Gray;
+            dist.Foreground = System.Windows.Media.Brushes.Gray;
         }
 
         public string getResultText() { return resultBox.Text; }
@@ -296,14 +325,14 @@ namespace DuOverlay
 
         public void openHelp(object sender, RoutedEventArgs e)
         {
-            try
+            /*try
             {
                 Process.Start("notepad.exe", "help.txt");
             }
             catch(Exception)
             {
                 MessageBox.Show("Couldn`t open help! Check file help.txt in application folder.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            }*/
         }
     }
 }

@@ -49,6 +49,7 @@ namespace DuOverlay
             setUpPositions();
         }
 
+        //dual.exe
         void setFocusToExternalApp(string strProcessName)
         {
             Process[] arrProcesses = Process.GetProcessesByName(strProcessName);

@@ -4,8 +4,7 @@ using System.Text;
 using System.Windows;
 using System.IO;
 using System.Diagnostics;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
+using System.Drawing;
 
 namespace DuOverlay
 {
@@ -15,7 +14,7 @@ namespace DuOverlay
 		private const String WINDOWED = "Windowed";
 
 		//Debug function
-		private void saveRGB(BitmapSource image)
+		private void saveRGB(Bitmap image)
 		{
 			StreamWriter writer;
 			//Logging
@@ -34,7 +33,7 @@ namespace DuOverlay
 			int baseWidth = 1421;
 			while (heightTracker > 234)
 			{
-				Color color = getColor(image,baseWidth, heightTracker);
+				Color color = image.GetPixel(baseWidth, heightTracker);
 
 				int red1 = (int)(color.R);
 				int red2 = (int)(color.B);
@@ -65,16 +64,16 @@ namespace DuOverlay
 			}
 		}
 
-		private int getFinalPos(int heightTracker, BitmapSource image, int baseWidth)
+		private int getFinalPos(int heightTracker, Bitmap image, int baseWidth)
 		{
 
 			int count = 0;
-			while (true)
+			while (heightTracker > 1)
 			{
 				heightTracker--;
 				count++;
-				Color color = getColor(image,baseWidth, heightTracker);
-				Color nextColor = getColor(image,baseWidth, heightTracker - 1);
+				Color color = image.GetPixel(baseWidth, heightTracker);
+				Color nextColor = image.GetPixel(baseWidth, heightTracker - 1);
 
 				if (!isOreRange(color,nextColor))
 				{
@@ -82,32 +81,8 @@ namespace DuOverlay
 					return count;
 				}
 			}
-		}
 
-		private static Color getColor(BitmapSource bitmap, int x, int y)
-		{
-			Color color;
-			var bytesPerPixel = (bitmap.Format.BitsPerPixel + 7) / 8;
-			var bytes = new byte[bytesPerPixel];
-			var rect = new Int32Rect(x, y, 1, 1);
-
-			bitmap.CopyPixels(rect, bytes, bytesPerPixel, 0);
-
-			if (bitmap.Format == PixelFormats.Bgra32)
-			{
-				color = Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
-			}
-			else if (bitmap.Format == PixelFormats.Bgr32)
-			{
-				color = Color.FromRgb(bytes[2], bytes[1], bytes[0]);
-			}
-			// handle other required formats
-			else
-			{
-				color = Colors.Black;
-			}
-
-			return color;
+			return 0;
 		}
 
 		public bool isOreRange(Color color1, Color color2)
@@ -123,7 +98,7 @@ namespace DuOverlay
 			return true;
         }
 
-		public double getOreDistance(BitmapSource image, bool showWarning)
+		public double getOreDistance(Bitmap image, bool showWarning)
 		{
 			//16:9
 			double ratioX = 2843.0 / 3840.0;
@@ -150,8 +125,8 @@ namespace DuOverlay
 
 			while (heightTracker > 1)
 			{
-				Color color = getColor(image,baseWidth, heightTracker);
-				Color nextColor = getColor(image,baseWidth, heightTracker - 1);
+				Color color = image.GetPixel(baseWidth, heightTracker);
+				Color nextColor = image.GetPixel(baseWidth, heightTracker - 1);
 
 				if (isOreRange(color,nextColor))
 				{

@@ -25,12 +25,13 @@ namespace DuOverlay
 
 		private double x1, y1, z1, a, b, c, R;
 
-		bool showWarnings = true;
+		private bool showWarnings = true;
 
 		//Main function
-		public void startSolve(List<String> varList, MainWindow con, bool showWarnings)
+		public void startSolve(List<String> varList, MainWindow con, bool showWarnings1)
 		{
-			showWarnings = false;
+			showWarnings = showWarnings1;
+
 			//Logging
 			try
 			{
