@@ -24,9 +24,9 @@ namespace DuOverlay
 
 
         MainWindow mainWindow;
-        KeyboardHook keyboardHook;
+        //KeyboardHook keyboardHook;
 
-        public Overlay(KeyboardHook keyboardHook1, MainWindow mainWindow1)
+        public Overlay(MainWindow mainWindow1)
         {
             InitializeComponent();
 
@@ -36,14 +36,7 @@ namespace DuOverlay
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
 
             //Initialize variables
-            keyboardHook = keyboardHook1;
             mainWindow = mainWindow1;
-
-            //Installing the Keyboard Hooks
-            keyboardHook.Install();
-            // Capture the events
-            keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
-            keyboardHook.KeyUp += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
 
             //Set up UI
             setUpPositions();
@@ -106,6 +99,49 @@ namespace DuOverlay
             }
         }
 
+        public void setDistanceColor(int number, Brush color)
+        {
+            switch (number)
+            {
+                case 1:
+                    dis1.Background = color;
+                    return;
+                case 2:
+                    dis2.Background = color;
+                    return;
+                case 3:
+                    dis3.Background = color;
+                    return;
+                case 4:
+                    dis4.Background = color;
+                    return;
+            }
+        }
+
+        public void setPositionColor(int number, Brush color)
+        {
+            switch (number)
+            {
+                case 1:
+                    pos1.Background = color;
+                    return;
+                case 2:
+                    pos2.Background = color;
+                    return;
+                case 3:
+                    pos3.Background = color;
+                    return;
+                case 4:
+                    pos4.Background = color;
+                    return;
+            }
+        }
+
+        public void setResultColor(Brush color)
+        {
+            resultBtn.Background = color;
+        }
+
         public void clearFields(object sender, RoutedEventArgs e)
         {
             pos1.Background = Brushes.White;
@@ -131,32 +167,6 @@ namespace DuOverlay
             {
                 resultBtn.Background = Brushes.Green;
             }
-        }
-
-        private void keyboardHook_KeyUp(KeyboardHook.VKeys key)
-        {
-            if(key == KeyboardHook.VKeys.F17)
-            {
-                if (this.IsVisible)
-                    this.Hide();
-                else
-                    this.Show();
-            }
-        }
-        private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
-        {
-            Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
-
-            KeyboardHook.VKeys gotKey = (KeyboardHook.VKeys)Enum.Parse(typeof(KeyboardHook.VKeys), key.ToString());
-            Int32 num = (Int32)gotKey;
-            //MessageBox.Show(num.ToString("X"));
-        }
-
-        public void OnApplicationExit()
-        {
-            keyboardHook.KeyDown -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
-            keyboardHook.KeyUp -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
-            keyboardHook.Uninstall();
         }
     }
 }

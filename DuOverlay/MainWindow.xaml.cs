@@ -29,8 +29,18 @@ namespace DuOverlay
             //Used to change , to . in decimal numbers
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-            //Initialize variables
+            //Initialize variables and load settings
             imageProcessing = new ImageProcessing();
+            //CUSTOM SETTINGS FOR DEBUG
+            /*SingletonSettings.Instance.changeSettings(true, SingletonSettings.DISPLAY_MODES.FULLSCREEN,true, KeyboardHook.VKeys.KEY_H,
+                KeyboardHook.VKeys.KEY_J, KeyboardHook.VKeys.KEY_K, KeyboardHook.VKeys.KEY_L);*/
+
+            loadSettings();
+
+            //START WINDOW AS MODAL WINDOW
+            /*
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();*/
 
             //Setup placeholder text
             clearAllFields(null,null);
@@ -39,10 +49,32 @@ namespace DuOverlay
             this.Closed += (sender, e) =>
             {
                 if(keyboardHook!=null)
-                    overlay.OnApplicationExit();
+                    OnApplicationExit();
                 
                 this.Dispatcher.InvokeShutdown();
             };
+        }
+
+        private void loadSettings()
+        {
+            if(SingletonSettings.Instance.shouldUseOverlay())
+            {
+                if (overlay == null)
+                    overlay = new Overlay(this);
+                overlay.Show();
+                overlayMenu.IsChecked = true;
+            }
+            if (SingletonSettings.Instance.shouldUseShortcuts())
+            {
+                if (keyboardHook == null)
+                    keyboardHook = new KeyboardHook();
+
+                //Installing the Keyboard Hooks
+                keyboardHook.Install();
+                // Capture the events
+                //keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
+                keyboardHook.KeyUp += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
+            }
         }
 
         //Called when textfield GotFocus gets fired
@@ -92,11 +124,8 @@ namespace DuOverlay
         //Opens overlay
         private void activateOverlay(object sender, RoutedEventArgs e)
         {
-            if (keyboardHook == null)
-                keyboardHook = new KeyboardHook();
-
             if (overlay == null)
-                overlay = new Overlay(keyboardHook,this);
+                overlay = new Overlay(this);
 
             if (overlayMenu.IsChecked)
             {
@@ -325,6 +354,7 @@ namespace DuOverlay
 
         public void openHelp(object sender, RoutedEventArgs e)
         {
+            //TODO make window
             /*try
             {
                 Process.Start("notepad.exe", "help.txt");
@@ -333,6 +363,94 @@ namespace DuOverlay
             {
                 MessageBox.Show("Couldn`t open help! Check file help.txt in application folder.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
             }*/
+        }
+
+
+        private void keyboardHook_KeyUp(KeyboardHook.VKeys key)
+        {
+            //MessageBox.Show("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
+            if (key == SingletonSettings.Instance.getOpenShortcut())
+            {
+                if (overlay != null)
+                {
+                    if (overlay.IsVisible)
+                        overlay.Hide();
+                    else
+                        overlay.Show();
+                }
+            }
+            if (key == SingletonSettings.Instance.getDisShortcut())
+            {
+                TextBox[] obj = new TextBox[] { dist1, dist2, dist3, dist4 };
+                for(int i=0;i<obj.Length;i++)
+                {
+                    if (isEmptyPlace(obj[i], DIST_PLACEHOLDER))
+                    {
+                        setOverlayDistance(i+1);
+                        break;
+                    }
+                }
+            }
+
+            if (key == SingletonSettings.Instance.getPosShortcut())
+            {
+                TextBox[] obj = new TextBox[] { field1, field2, field3, field4 };
+                for (int i = 0; i < obj.Length; i++)
+                {
+                    if (isEmptyPlace(obj[i], POS_PLACEHOLDER))
+                    {
+                        setOverlayPositions(i + 1);
+                        break;
+                    }
+                }
+            }
+
+            if (key == SingletonSettings.Instance.getResultShortcut())
+            {
+                calculateOrePos(null, null);
+                if (string.IsNullOrEmpty(getResultText()))
+                {
+                    overlay.setResultColor(System.Windows.Media.Brushes.Red);
+                }
+                else
+                {
+                    overlay.setResultColor(System.Windows.Media.Brushes.Green);
+                }
+            }
+            /*private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
+            {
+                //Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
+
+                KeyboardHook.VKeys gotKey = (KeyboardHook.VKeys)Enum.Parse(typeof(KeyboardHook.VKeys), key.ToString());
+                Int32 num = (Int32)gotKey;
+                //MessageBox.Show(num.ToString("X"));
+            }*/
+        }
+        private void setOverlayDistance(int number)
+        {
+            if (setDistance(number))
+                overlay.setDistanceColor(number, System.Windows.Media.Brushes.Green);
+            else
+                overlay.setDistanceColor(number, System.Windows.Media.Brushes.Red);
+        }        
+        private void setOverlayPositions(int number)
+        {
+            if (setFieldText(number))
+                overlay.setPositionColor(number, System.Windows.Media.Brushes.Green);
+            else
+                overlay.setPositionColor(number, System.Windows.Media.Brushes.Red);
+        }
+
+        private bool isEmptyPlace(TextBox tb, string placeholder)
+        {
+            return string.IsNullOrEmpty(tb.Text) || tb.Text.Equals(placeholder) || tb.Text.Length < 2;
+        }
+
+        public void OnApplicationExit()
+        {
+            //keyboardHook.KeyDown -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
+            keyboardHook.KeyUp -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
+            keyboardHook.Uninstall();
         }
     }
 }

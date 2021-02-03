@@ -107,9 +107,9 @@ namespace DuOverlay
 			double height;
 			int baseHeight, baseWidth, heightTracker;
 
-			const string screenChoiceMenu = FULLSCREEN; //TODO MAKE SETTINGS!
+			SingletonSettings. DISPLAY_MODES screenChoiceMenu = SingletonSettings.Instance.getDisplayMode();
 
-			if (screenChoiceMenu.Equals(WINDOWED))
+			if (SingletonSettings.DISPLAY_MODES.WINDOWED == screenChoiceMenu)
 			{
 				height = image.Height - 32;
 				baseHeight = (int)(ratioY * height) + 31;
