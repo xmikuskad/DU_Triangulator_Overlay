@@ -35,7 +35,7 @@ namespace DuOverlay
         // Explicit static constructor to tell C# compiler  
         // not to mark type as beforefieldinit  
         static SingletonSettings() {}
-        private SingletonSettings() { getSettings(); }
+        private SingletonSettings() { updateSettings(); }
         public static SingletonSettings Instance
         {
             get
@@ -43,12 +43,7 @@ namespace DuOverlay
                 return instance;
             }
         }
-
-        public void printSettings()
-        {
-            MessageBox.Show("OVERLAY: "+ ((DISPLAY_MODES)Enum.Parse(typeof(DISPLAY_MODES), openShortcut.ToString())).ToString());
-        }
-        private void getSettings()
+        public void updateSettings()
         {
             if (File.Exists(PATH))
             {
@@ -56,12 +51,11 @@ namespace DuOverlay
                 { 
                     loadSettings();
                 }
-                catch(Exception)
+                catch(Exception e)
                 {
                     MessageBox.Show("Settings file corrupted, reverting to default!","ERROR",MessageBoxButton.OK,MessageBoxImage.Error);
                     createSettingsFile();
                 }
-               
             }
             else
             {
@@ -76,18 +70,23 @@ namespace DuOverlay
                 OPEN_SHORTCUT+"=0\n"+POS_SHORTCUT+"=0\n"+DIST_SHORTCUT+"=0\n"+RESULT_SHORTCUT+"=0\n");
         }
 
-        public void changeSettings(bool newOvelay, DISPLAY_MODES newDisplayMode, bool newShortcut, KeyboardHook.VKeys newOpen,
+        public void saveSettings(bool newOvelay, DISPLAY_MODES newDisplayMode, bool newShortcut, KeyboardHook.VKeys newOpen,
             KeyboardHook.VKeys newPos, KeyboardHook.VKeys newDist, KeyboardHook.VKeys newResult)
         {
             File.WriteAllText(PATH, OVERLAY_ON + "="+newOvelay.ToString()+"\n" + DISPLAY_MODE + "="+newDisplayMode.ToString()+"\n"+
                 ALLOW_SHORTCUTS+"="+ newShortcut.ToString()+"\n"+OPEN_SHORTCUT+"="+newOpen.ToString()+"\n"+POS_SHORTCUT+"="+
                 newPos.ToString()+"\n"+DIST_SHORTCUT+"="+newDist.ToString()+"\n"+RESULT_SHORTCUT+"="+newResult.ToString());
+            
             loadSettings();
         }
 
         private void loadSettings()
         {
             string[] lines = File.ReadAllLines(PATH);
+
+            if (lines.Length < 7)
+                throw new Exception("Bad formatting of settings file!");
+
             foreach(string line in lines)
             {
                 var splitted = line.Split("=");

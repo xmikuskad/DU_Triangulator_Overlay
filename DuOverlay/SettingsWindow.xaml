@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DuOverlay"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Settings - Triangulator" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <Canvas Height="500" Width="460">
+        <CheckBox x:Name="overlayCheckbox" FontSize="15" VerticalContentAlignment="Center" Height="30" Content="Allow overlay" Canvas.Left="105" Canvas.Top="70"/>
+        <Label Content="Display mode: " FontSize="15" VerticalContentAlignment="Center" Height="30" Canvas.Left="100" Canvas.Top="110"/>
+        <ComboBox VerticalContentAlignment="Center" FontSize="15" Height="30" Canvas.Left="250" Canvas.Top="110">
+            <ComboBoxItem x:Name="fullscreenItem">FULLSCREEN</ComboBoxItem>
+            <ComboBoxItem x:Name="windowedItem">WINDOWED</ComboBoxItem>
+        </ComboBox>
+        <CheckBox x:Name="shortcutCheckbox" Click="shortcutCheckboxChanged" FontSize="15" VerticalContentAlignment="Center" Height="30" Content="Allow shortcuts" Canvas.Left="105" Canvas.Top="150"/>
+        <Canvas x:Name="shortcutCanvas" IsEnabled="True">
+            <Label Content="Shortcuts:"  Canvas.Left="100" Canvas.Top="190" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <Label Content="Turn overlay on/off"  Canvas.Left="100" Canvas.Top="230" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <ToggleButton x:Name="onOffShortcut" Canvas.Left="250" Canvas.Top="230" Click="setShortcut" Content="KEY" Width="70" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <Button Tag="1" Click="clearShortcut" ToolTip="Clear this shortcut" Canvas.Left="335" Canvas.Top="233" Height="24" Width="24">
+                <Image Source="Resources/image.png"/>
+            </Button>
+
+            <Label Content="Set next position"  Canvas.Left="100" Canvas.Top="270" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <ToggleButton x:Name="nextPosShortcut" Canvas.Left="250" Canvas.Top="270" Click="setShortcut" Content="KEY" Width="70" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <Button Tag="2" Click="clearShortcut" ToolTip="Clear this shortcut" Canvas.Left="335" Canvas.Top="273" Height="24" Width="24">
+                <Image Source="Resources/image.png"/>
+            </Button>
+
+            <Label Content="Set next distance"  Canvas.Left="100" Canvas.Top="310" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <ToggleButton x:Name="nextDisShortcut" Canvas.Left="250" Canvas.Top="310" Click="setShortcut" Content="KEY" Width="70" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <Button Tag="3" Click="clearShortcut" ToolTip="Clear this shortcut" Canvas.Left="335" Canvas.Top="313" Height="24" Width="24">
+                <Image Source="Resources/image.png"/>
+            </Button>
+
+            <Label Content="Get result"  Canvas.Left="100" Canvas.Top="350" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <ToggleButton x:Name="resultShortcut" Canvas.Left="250" Canvas.Top="350" Click="setShortcut" Content="KEY" Width="70" FontSize="15" VerticalContentAlignment="Center" Height="30"/>
+            <Button Tag="4" Click="clearShortcut" ToolTip="Clear this shortcut" Canvas.Left="335" Canvas.Top="353" Height="24" Width="24">
+                <Image Source="Resources/image.png"/>
+            </Button>
+            
+        </Canvas>
+
+        <Button Canvas.Left="170" Canvas.Top="430" Click="saveSettings" Content="Save settings" Width="120" FontSize="18" VerticalContentAlignment="Center" Height="35"/>
+
+    </Canvas>
 </Window>

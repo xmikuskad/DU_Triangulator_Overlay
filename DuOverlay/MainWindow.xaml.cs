@@ -15,6 +15,7 @@ namespace DuOverlay
     public partial class MainWindow : Window
     {
         Overlay overlay;
+        SettingsWindow settings;
         KeyboardHook keyboardHook;
         Solver solver;
         ImageProcessing imageProcessing;
@@ -55,6 +56,12 @@ namespace DuOverlay
             };
         }
 
+        public void showSettings(object sender, RoutedEventArgs e)
+        {
+            settings = new SettingsWindow(this);
+            settings.ShowDialog();
+        }
+
         private void loadSettings()
         {
             if(SingletonSettings.Instance.shouldUseOverlay())
@@ -64,7 +71,8 @@ namespace DuOverlay
                 overlay.Show();
                 overlayMenu.IsChecked = true;
             }
-            if (SingletonSettings.Instance.shouldUseShortcuts())
+
+            if (keyboardHook == null)
             {
                 if (keyboardHook == null)
                     keyboardHook = new KeyboardHook();
@@ -180,29 +188,37 @@ namespace DuOverlay
             {
                 BitmapSource image = Clipboard.GetImage();*/
 
-                switch (number)
-                {
-                    case 1:
-                        changeOreDistText(dist1, image, false);
-                        if (Double.Parse(dist1.Text) < 10)
-                            return false;
-                        return true;
-                    case 2:
-                        changeOreDistText(dist2, image, false);
-                        if (Double.Parse(dist2.Text) < 10)
-                            return false;
-                        return true;
-                    case 3:
-                        changeOreDistText(dist3, image, false);
-                        if (Double.Parse(dist3.Text) < 10)
-                            return false;
-                        return true;
-                    case 4:
-                        changeOreDistText(dist4, image, false);
-                        if (Double.Parse(dist4.Text) < 10)
-                            return false;
-                        return true;
-                }
+            switch (number)
+            {
+                case 1:
+                    changeOreDistText(dist1, image, false);
+                    image.Dispose();
+                    graphics.Dispose();
+                    if (Double.Parse(dist1.Text) < 10)
+                        return false;
+                    return true;
+                case 2:
+                    changeOreDistText(dist2, image, false);
+                    image.Dispose();
+                    graphics.Dispose();
+                    if (Double.Parse(dist2.Text) < 10)
+                        return false;
+                    return true;
+                case 3:
+                    changeOreDistText(dist3, image, false);
+                    image.Dispose();
+                    graphics.Dispose();
+                    if (Double.Parse(dist3.Text) < 10)
+                        return false;
+                    return true;
+                case 4:
+                    changeOreDistText(dist4, image, false);
+                    image.Dispose();
+                    graphics.Dispose();
+                    if (Double.Parse(dist4.Text) < 10)
+                        return false;
+                    return true;
+            }
             //}
             return false;
         }
@@ -238,6 +254,9 @@ namespace DuOverlay
             {
                 changeOreDistText(dist4, image, true);
             }
+
+            image.Dispose();
+            graphics.Dispose();
             /* }
              else
              {
@@ -369,6 +388,15 @@ namespace DuOverlay
         private void keyboardHook_KeyUp(KeyboardHook.VKeys key)
         {
             //MessageBox.Show("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
+
+            if(settings!=null)
+            {
+                settings.changeRecordingBtnText(key);
+            }
+
+            if (!SingletonSettings.Instance.shouldUseShortcuts())
+                return;
+
             if (key == SingletonSettings.Instance.getOpenShortcut())
             {
                 if (overlay != null)
@@ -444,6 +472,26 @@ namespace DuOverlay
         private bool isEmptyPlace(TextBox tb, string placeholder)
         {
             return string.IsNullOrEmpty(tb.Text) || tb.Text.Equals(placeholder) || tb.Text.Length < 2;
+        }
+
+        //Update UI for settings
+        public void closeSettings()
+        {
+            settings = null;
+            if (SingletonSettings.Instance.shouldUseOverlay())
+            {
+                if (overlay == null)
+                    overlay = new Overlay(this);
+                overlay.Show();
+                overlayMenu.IsChecked = true;
+            }
+            else
+            {
+                if (overlay != null)
+                    overlay.Close();
+                overlay = null;
+                overlayMenu.IsChecked = false;
+            }
         }
 
         public void OnApplicationExit()

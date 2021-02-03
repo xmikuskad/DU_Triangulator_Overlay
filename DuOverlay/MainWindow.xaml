@@ -13,7 +13,7 @@
                 <MenuItem x:Name="overlayMenu" Header="_Activate" Click="activateOverlay" IsCheckable="true"/>
             </MenuItem>
             <MenuItem Header="_Settings" FontSize="15" Height="25">
-                <MenuItem Header="_Open settings"/>
+                <MenuItem Header="_Open settings" Click="showSettings"/>
             </MenuItem>
             <MenuItem Header="_About" FontSize="15" Height="25">
                 <MenuItem Header="_Help" Click="openHelp"/>
