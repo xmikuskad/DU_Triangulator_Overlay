@@ -10,9 +10,6 @@ namespace DuOverlay
 {
     class ImageProcessing
     {
-		private const String FULLSCREEN = "Fullscreen";
-		private const String WINDOWED = "Windowed";
-
 		//Debug function
 		private void saveRGB(Bitmap image)
 		{
@@ -66,7 +63,6 @@ namespace DuOverlay
 
 		private int getFinalPos(int heightTracker, Bitmap image, int baseWidth)
 		{
-
 			int count = 0;
 			while (heightTracker > 1)
 			{
@@ -77,7 +73,6 @@ namespace DuOverlay
 
 				if (!isOreRange(color,nextColor))
 				{
-					Debug.WriteLine("Count: " + count);
 					return count;
 				}
 			}

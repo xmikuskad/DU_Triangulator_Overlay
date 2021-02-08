@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
 
+//TODO ADD AS SOURCE
 // PREBRANE Z 
 // https://github.com/rvknth043/Global-Low-Level-Key-Board-And-Mouse-Hook
 
@@ -23,24 +21,24 @@ namespace DuOverlay
         {
             // Losely based on http://www.pinvoke.net/default.aspx/Enums/VK.html
 
-            LBUTTON = 0x01,     // Left mouse button
-            RBUTTON = 0x02,     // Right mouse button
+            LMOUSE = 0x01,     // Left mouse button
+            RMOUSE = 0x02,     // Right mouse button
             CANCEL = 0x03,      // Control-break processing
-            MBUTTON = 0x04,     // Middle mouse button (three-button mouse)
-            XBUTTON1 = 0x05,    // Windows 2000/XP: X1 mouse button
-            XBUTTON2 = 0x06,    // Windows 2000/XP: X2 mouse button
+            MMOUSE = 0x04,     // Middle mouse button (three-button mouse)
+            XMOUSE1 = 0x05,    // Windows 2000/XP: X1 mouse button
+            XMOUSE2 = 0x06,    // Windows 2000/XP: X2 mouse button
             //                  0x07   // Undefined
-            BACK = 0x08,        // BACKSPACE key
+            BACKSPACE = 0x08,        // BACKSPACE key
             TAB = 0x09,         // TAB key
             //                  0x0A-0x0B,  // Reserved
             CLEAR = 0x0C,       // CLEAR key
             RETURN = 0x0D,      // ENTER key
             //                  0x0E-0x0F, // Undefined
             SHIFT = 0x10,       // SHIFT key
-            CONTROL = 0x11,     // CTRL key
+            CTRL = 0x11,     // CTRL key
             MENU = 0x12,        // ALT key
             PAUSE = 0x13,       // PAUSE key
-            CAPITAL = 0x14,     // CAPS LOCK key
+            CAPS = 0x14,     // CAPS LOCK key
             KANA = 0x15,        // Input Method Editor (IME) Kana mode
             HANGUL = 0x15,      // IME Hangul mode
             //                  0x16,  // Undefined
@@ -49,14 +47,14 @@ namespace DuOverlay
             HANJA = 0x19,       // IME Hanja mode
             KANJI = 0x19,       // IME Kanji mode
             //                  0x1A,  // Undefined
-            ESCAPE = 0x1B,      // ESC key
+            ESC = 0x1B,      // ESC key
             CONVERT = 0x1C,     // IME convert
-            NONCONVERT = 0x1D,  // IME nonconvert
+            NON_CONV = 0x1D,  // IME nonconvert
             ACCEPT = 0x1E,      // IME accept
-            MODECHANGE = 0x1F,  // IME mode change request
+            MODE_CHANGE = 0x1F,  // IME mode change request
             SPACE = 0x20,       // SPACEBAR
-            PRIOR = 0x21,       // PAGE UP key
-            NEXT = 0x22,        // PAGE DOWN key
+            PG_UP = 0x21,       // PAGE UP key
+            PG_DOWN = 0x22,        // PAGE DOWN key
             END = 0x23,         // END key
             HOME = 0x24,        // HOME key
             LEFT = 0x25,        // LEFT ARROW key
@@ -66,7 +64,7 @@ namespace DuOverlay
             SELECT = 0x29,      // SELECT key
             PRINT = 0x2A,       // PRINT key
             EXECUTE = 0x2B,     // EXECUTE key
-            SNAPSHOT = 0x2C,    // PRINT SCREEN key
+            PRTSC = 0x2C,    // PRINT SCREEN key
             INSERT = 0x2D,      // INS key
             DELETE = 0x2E,      // DEL key
             HELP = 0x2F,        // HELP key
@@ -112,17 +110,17 @@ namespace DuOverlay
             APPS = 0x5D,        // Applications key (Natural keyboard)
             //                  0x5E, // Reserved
             SLEEP = 0x5F,       // Computer Sleep key
-            NUMPAD0 = 0x60,     // Numeric keypad 0 key
-            NUMPAD1 = 0x61,     // Numeric keypad 1 key
-            NUMPAD2 = 0x62,     // Numeric keypad 2 key
-            NUMPAD3 = 0x63,     // Numeric keypad 3 key
-            NUMPAD4 = 0x64,     // Numeric keypad 4 key
-            NUMPAD5 = 0x65,     // Numeric keypad 5 key
-            NUMPAD6 = 0x66,     // Numeric keypad 6 key
-            NUMPAD7 = 0x67,     // Numeric keypad 7 key
-            NUMPAD8 = 0x68,     // Numeric keypad 8 key
-            NUMPAD9 = 0x69,     // Numeric keypad 9 key
-            MULTIPLY = 0x6A,    // Multiply key
+            NUM0 = 0x60,     // Numeric keypad 0 key
+            NUM1 = 0x61,     // Numeric keypad 1 key
+            NUM2 = 0x62,     // Numeric keypad 2 key
+            NUM3 = 0x63,     // Numeric keypad 3 key
+            NUM4 = 0x64,     // Numeric keypad 4 key
+            NUM5 = 0x65,     // Numeric keypad 5 key
+            NUM6 = 0x66,     // Numeric keypad 6 key
+            NUM7 = 0x67,     // Numeric keypad 7 key
+            NUM8 = 0x68,     // Numeric keypad 8 key
+            NUM9 = 0x69,     // Numeric keypad 9 key
+            MULT = 0x6A,    // Multiply key
             ADD = 0x6B,         // Add key
             SEPARATOR = 0x6C,   // Separator key
             SUBTRACT = 0x6D,    // Subtract key
@@ -159,48 +157,48 @@ namespace DuOverlay
             //                  0x97-0x9F,  // Unassigned
             LSHIFT = 0xA0,      // Left SHIFT key
             RSHIFT = 0xA1,      // Right SHIFT key
-            LCONTROL = 0xA2,    // Left CONTROL key
-            RCONTROL = 0xA3,    // Right CONTROL key
-            LMENU = 0xA4,       // Left MENU key
-            RMENU = 0xA5,       // Right MENU key
-            BROWSER_BACK = 0xA6,    // Windows 2000/XP: Browser Back key
-            BROWSER_FORWARD = 0xA7, // Windows 2000/XP: Browser Forward key
-            BROWSER_REFRESH = 0xA8, // Windows 2000/XP: Browser Refresh key
-            BROWSER_STOP = 0xA9,    // Windows 2000/XP: Browser Stop key
-            BROWSER_SEARCH = 0xAA,  // Windows 2000/XP: Browser Search key
-            BROWSER_FAVORITES = 0xAB,  // Windows 2000/XP: Browser Favorites key
-            BROWSER_HOME = 0xAC,    // Windows 2000/XP: Browser Start and Home key
-            VOLUME_MUTE = 0xAD,     // Windows 2000/XP: Volume Mute key
-            VOLUME_DOWN = 0xAE,     // Windows 2000/XP: Volume Down key
-            VOLUME_UP = 0xAF,  // Windows 2000/XP: Volume Up key
-            MEDIA_NEXT_TRACK = 0xB0,// Windows 2000/XP: Next Track key
-            MEDIA_PREV_TRACK = 0xB1,// Windows 2000/XP: Previous Track key
-            MEDIA_STOP = 0xB2, // Windows 2000/XP: Stop Media key
-            MEDIA_PLAY_PAUSE = 0xB3,// Windows 2000/XP: Play/Pause Media key
-            LAUNCH_MAIL = 0xB4,     // Windows 2000/XP: Start Mail key
-            LAUNCH_MEDIA_SELECT = 0xB5,  // Windows 2000/XP: Select Media key
-            LAUNCH_APP1 = 0xB6,     // Windows 2000/XP: Start Application 1 key
-            LAUNCH_APP2 = 0xB7,     // Windows 2000/XP: Start Application 2 key
+            LCTRL = 0xA2,    // Left CONTROL key
+            RCTRL = 0xA3,    // Right CONTROL key
+            LALT = 0xA4,       // Left MENU key
+            RALT = 0xA5,       // Right MENU key
+            B_BACK = 0xA6,    // Windows 2000/XP: Browser Back key
+            B_FORW = 0xA7, // Windows 2000/XP: Browser Forward key
+            B_REFR = 0xA8, // Windows 2000/XP: Browser Refresh key
+            B_STOP = 0xA9,    // Windows 2000/XP: Browser Stop key
+            B_SEARCH = 0xAA,  // Windows 2000/XP: Browser Search key
+            B_FAVOR = 0xAB,  // Windows 2000/XP: Browser Favorites key
+            B_HOME = 0xAC,    // Windows 2000/XP: Browser Start and Home key
+            V_MUTE = 0xAD,     // Windows 2000/XP: Volume Mute key
+            V_DOWN = 0xAE,     // Windows 2000/XP: Volume Down key
+            V_UP = 0xAF,  // Windows 2000/XP: Volume Up key
+            M_NEXT = 0xB0,// Windows 2000/XP: Next Track key
+            M_PREV = 0xB1,// Windows 2000/XP: Previous Track key
+            M_STOP = 0xB2, // Windows 2000/XP: Stop Media key
+            M_PAUSE = 0xB3,// Windows 2000/XP: Play/Pause Media key
+            MAIL = 0xB4,     // Windows 2000/XP: Start Mail key
+            M_SELECT = 0xB5,  // Windows 2000/XP: Select Media key
+            APP1 = 0xB6,     // Windows 2000/XP: Start Application 1 key
+            APP2 = 0xB7,     // Windows 2000/XP: Start Application 2 key
             //                  0xB8-0xB9,  // Reserved
-            OEM_1 = 0xBA,       // Used for miscellaneous characters; it can vary by keyboard.
+            SEMICOLON = 0xBA,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the ';:' key
-            OEM_PLUS = 0xBB,    // Windows 2000/XP: For any country/region, the '+' key
-            OEM_COMMA = 0xBC,   // Windows 2000/XP: For any country/region, the ',' key
-            OEM_MINUS = 0xBD,   // Windows 2000/XP: For any country/region, the '-' key
-            OEM_PERIOD = 0xBE,  // Windows 2000/XP: For any country/region, the '.' key
-            OEM_2 = 0xBF,       // Used for miscellaneous characters; it can vary by keyboard.
+            PLUS = 0xBB,    // Windows 2000/XP: For any country/region, the '+' key
+            COMMA = 0xBC,   // Windows 2000/XP: For any country/region, the ',' key
+            MINUS = 0xBD,   // Windows 2000/XP: For any country/region, the '-' key
+            PERIOD = 0xBE,  // Windows 2000/XP: For any country/region, the '.' key
+            SLASH = 0xBF,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the '/?' key
-            OEM_3 = 0xC0,       // Used for miscellaneous characters; it can vary by keyboard.
+            TILDE = 0xC0,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the '`~' key
             //                  0xC1-0xD7,  // Reserved
             //                  0xD8-0xDA,  // Unassigned
-            OEM_4 = 0xDB,       // Used for miscellaneous characters; it can vary by keyboard.
+            OPEN_B = 0xDB,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the '[{' key
-            OEM_5 = 0xDC,       // Used for miscellaneous characters; it can vary by keyboard.
+            PIPE = 0xDC,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the '\|' key
-            OEM_6 = 0xDD,       // Used for miscellaneous characters; it can vary by keyboard.
+            CLOSED_B = 0xDD,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the ']}' key
-            OEM_7 = 0xDE,       // Used for miscellaneous characters; it can vary by keyboard.
+            QUOTES = 0xDE,       // Used for miscellaneous characters; it can vary by keyboard.
             // Windows 2000/XP: For the US standard keyboard, the 'single-quote/double-quote' key
             OEM_8 = 0xDF,       // Used for miscellaneous characters; it can vary by keyboard.
             //                  0xE0,  // Reserved
@@ -220,7 +218,7 @@ namespace DuOverlay
             ZOOM = 0xFB,        // Zoom key
             NONAME = 0xFC,      // Reserved
             PA1 = 0xFD,         // PA1 key
-            OEM_CLEAR = 0xFE    // Clear key
+            CLEAR_KEY = 0xFE    // Clear key
         }
 
         /// <summary>

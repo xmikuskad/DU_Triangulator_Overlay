@@ -12,6 +12,7 @@ namespace DuOverlay
     {
         const int WS_EX_TRANSPARENT = 0x00000020;
         const int GWL_EXSTYLE = (-20);
+        const string DUAL_APP_NAME = "dual.exe";
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -22,9 +23,7 @@ namespace DuOverlay
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-
         MainWindow mainWindow;
-        //KeyboardHook keyboardHook;
 
         public Overlay(MainWindow mainWindow1)
         {
@@ -42,22 +41,19 @@ namespace DuOverlay
             setUpPositions();
         }
 
-        //dual.exe
-        void setFocusToExternalApp(string strProcessName)
+        //Set focus back to DU to avoid doubleclicking
+        void setFocusToDual()
         {
-            Process[] arrProcesses = Process.GetProcessesByName(strProcessName);
+            Process[] arrProcesses = Process.GetProcessesByName(DUAL_APP_NAME);
             if (arrProcesses.Length > 0)
             {
                 //Use the very first process (if there is many of them)
                 IntPtr ipHwnd = arrProcesses[0].MainWindowHandle;
                 bool fSuccess = SetForegroundWindow(ipHwnd);
-                if (!fSuccess)
-                    MessageBox.Show("Couldn't set the focus to app \"" + strProcessName + "\".");
             }
-            else
-                MessageBox.Show("Couldn't find app \"" + strProcessName + "\".");
         }
 
+        //Set overlay position - dynamic TODO
         private void setUpPositions()
         {
             Canvas.SetLeft(canvas1, 100);
@@ -67,6 +63,7 @@ namespace DuOverlay
             Canvas.SetLeft(canvas5, 100);
         }
 
+        //Called when position button is pressed
         public void setPosition(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -82,7 +79,10 @@ namespace DuOverlay
                 //Error
                 btn.Background = Brushes.Red;
             }
+            setFocusToDual();
         }
+
+        //Called when position button is pressed
         public void setDistance(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -97,8 +97,10 @@ namespace DuOverlay
                 //Error
                 btn.Background = Brushes.Red;
             }
+            setFocusToDual();
         }
 
+        //Callback to show result
         public void setDistanceColor(int number, Brush color)
         {
             switch (number)
@@ -118,6 +120,7 @@ namespace DuOverlay
             }
         }
 
+        //Callback to show result
         public void setPositionColor(int number, Brush color)
         {
             switch (number)
@@ -142,6 +145,7 @@ namespace DuOverlay
             resultBtn.Background = color;
         }
 
+        //Clear button colors
         public void clearFields(object sender, RoutedEventArgs e)
         {
             pos1.Background = Brushes.White;
@@ -156,6 +160,8 @@ namespace DuOverlay
 
             mainWindow.clearAllFields(null,null);
         }
+
+        //Called when result btn is pressed
         public void getResult(object sender, RoutedEventArgs e)
         {
             mainWindow.calculateOrePos(null,null);

@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DuOverlay
 {
@@ -21,6 +13,7 @@ namespace DuOverlay
         MainWindow mainWindow;
         ToggleButton recordingBtn = null;
 
+        //Changes were saved
         bool shouldUpdate = false;
 
         public SettingsWindow(MainWindow mainWindow1)
@@ -38,7 +31,7 @@ namespace DuOverlay
             };
         }
 
-        //Init UI
+        //Init UI with actual settings
         private void getDataFromSettings()
         {
             SingletonSettings.Instance.updateSettings();
@@ -93,7 +86,6 @@ namespace DuOverlay
 
         public void setShortcut(object sender, RoutedEventArgs e)
         {
-            //TODO check for multiple recordings !
             var btn = sender as ToggleButton;
 
             if (btn.IsChecked.Value)
@@ -108,10 +100,6 @@ namespace DuOverlay
                 recordingBtn = btn;
                 btn.Content = "Press KEY";
             }
-            /*else
-            {
-                recordingBtn = null;                
-            }*/
         }
 
         public void changeRecordingBtnText(KeyboardHook.VKeys key)
@@ -124,6 +112,7 @@ namespace DuOverlay
             }
         }
 
+        //Called by X buttons
         public void clearShortcut(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -146,7 +135,7 @@ namespace DuOverlay
             }
         }
 
-
+        //Save settings and close window
         public void saveSettings(object sender, RoutedEventArgs e)
         {
             try

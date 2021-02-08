@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace DuOverlay
 {
@@ -32,16 +28,7 @@ namespace DuOverlay
 
             //Initialize variables and load settings
             imageProcessing = new ImageProcessing();
-            //CUSTOM SETTINGS FOR DEBUG
-            /*SingletonSettings.Instance.changeSettings(true, SingletonSettings.DISPLAY_MODES.FULLSCREEN,true, KeyboardHook.VKeys.KEY_H,
-                KeyboardHook.VKeys.KEY_J, KeyboardHook.VKeys.KEY_K, KeyboardHook.VKeys.KEY_L);*/
-
             loadSettings();
-
-            //START WINDOW AS MODAL WINDOW
-            /*
-            SettingsWindow settingsWindow = new SettingsWindow();
-            settingsWindow.ShowDialog();*/
 
             //Setup placeholder text
             clearAllFields(null,null);
@@ -56,12 +43,14 @@ namespace DuOverlay
             };
         }
 
+        //Open settings window
         public void showSettings(object sender, RoutedEventArgs e)
         {
             settings = new SettingsWindow(this);
             settings.ShowDialog();
         }
 
+        //Load user settings 
         private void loadSettings()
         {
             if(SingletonSettings.Instance.shouldUseOverlay())
@@ -74,18 +63,15 @@ namespace DuOverlay
 
             if (keyboardHook == null)
             {
-                if (keyboardHook == null)
-                    keyboardHook = new KeyboardHook();
+                keyboardHook = new KeyboardHook();
 
                 //Installing the Keyboard Hooks
                 keyboardHook.Install();
-                // Capture the events
-                //keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
                 keyboardHook.KeyUp += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
             }
         }
 
-        //Called when textfield GotFocus gets fired
+        //Called when textfield GotFocus gets fired - simulate hint text
         public void removePosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -96,7 +82,7 @@ namespace DuOverlay
             }
         }
 
-        //Called when textfield LostFocus gets fired
+        //Called when textfield LostFocus gets fired - simulate hint text
         public void addPosPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -107,7 +93,7 @@ namespace DuOverlay
             }
         }
 
-        //Called when textfield GotFocus gets fired
+        //Called when textfield GotFocus gets fired - simulate hint text
         public void removeDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -118,7 +104,7 @@ namespace DuOverlay
             }
         }
 
-        //Called when textfield LostFocus gets fired
+        //Called when textfield LostFocus gets fired - simulate hint text
         public void addDistPlaceholder(object sender, RoutedEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -184,10 +170,6 @@ namespace DuOverlay
             Graphics graphics = Graphics.FromImage(image as System.Drawing.Image);
             graphics.CopyFromScreen(0, 0, 0, 0, image.Size);
 
-            /*if (Clipboard.ContainsImage())
-            {
-                BitmapSource image = Clipboard.GetImage();*/
-
             switch (number)
             {
                 case 1:
@@ -219,22 +201,15 @@ namespace DuOverlay
                         return false;
                     return true;
             }
-            //}
             return false;
         }
 
         public void calculateDistanceImage(object sender, RoutedEventArgs e)
         {
-            /*if (Clipboard.ContainsImage())
-            {*/
-            //BitmapSource source = Clipboard.GetImage();
-
             Bitmap image = new Bitmap((int)Math.Floor(SystemParameters.PrimaryScreenWidth), (int)Math.Floor(SystemParameters.PrimaryScreenHeight));
             Graphics graphics = Graphics.FromImage(image as System.Drawing.Image);
             graphics.CopyFromScreen(0, 0, 0, 0, image.Size);
-            /*SaveControlImage(printscreen);
 
-            BitmapSource image = new BitmapImage(new Uri(@".\image.bmp"));*/
             var btn = sender as Button;
             String code = btn.Tag.ToString();
 
@@ -255,30 +230,9 @@ namespace DuOverlay
                 changeOreDistText(dist4, image, true);
             }
 
+            //Garbage collector is too slow
             image.Dispose();
             graphics.Dispose();
-            /* }
-             else
-             {
-                 MessageBox.Show("No screenshot in clipboard!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-             }*/
-        }
-
-        public BitmapSource convertToSource(Bitmap bitmap)
-        {
-            var bitmapData = bitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
-
-            var bitmapSource = BitmapSource.Create(
-                bitmapData.Width, bitmapData.Height,
-                bitmap.HorizontalResolution, bitmap.VerticalResolution,
-                PixelFormats.Bgra32, null,
-                bitmapData.Scan0, bitmapData.Stride * bitmapData.Height, bitmapData.Stride);
-
-            bitmap.UnlockBits(bitmapData);
-
-            return bitmapSource;
         }
 
         public void changeOreDistText(TextBox tb,Bitmap image, bool showWarning)
@@ -288,6 +242,7 @@ namespace DuOverlay
             addDistPlaceholder(tb, null);
         }
 
+        //Called when get result btn is pressed - starts calculation
         public void calculateOrePos(object sender, RoutedEventArgs e)
         {
             solver = new Solver();
@@ -301,14 +256,9 @@ namespace DuOverlay
             varList.Add(field4.Text);
             varList.Add(dist4.Text);
 
-            if (sender!= null)
-            {
-                solver.startSolve(varList, this, true);
-            }
-            else
-            {
-                solver.startSolve(varList, this, false);
-            }
+            //Check if it was called from overlay or not.
+            bool shouldShowWarnings = sender != null;
+            solver.startSolve(varList, this, shouldShowWarnings);
         }
 
         public void clearField(object sender, RoutedEventArgs e)
@@ -374,6 +324,7 @@ namespace DuOverlay
         public void openHelp(object sender, RoutedEventArgs e)
         {
             //TODO make window
+            //Triggers antivirus warnings
             /*try
             {
                 Process.Start("notepad.exe", "help.txt");
@@ -387,8 +338,7 @@ namespace DuOverlay
 
         private void keyboardHook_KeyUp(KeyboardHook.VKeys key)
         {
-            //MessageBox.Show("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
-
+            //Used for recording button shortcuts - TODO better solution
             if(settings!=null)
             {
                 settings.changeRecordingBtnText(key);
@@ -445,14 +395,6 @@ namespace DuOverlay
                     overlay.setResultColor(System.Windows.Media.Brushes.Green);
                 }
             }
-            /*private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
-            {
-                //Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] KeyDown Event {" + key.ToString() + "}");
-
-                KeyboardHook.VKeys gotKey = (KeyboardHook.VKeys)Enum.Parse(typeof(KeyboardHook.VKeys), key.ToString());
-                Int32 num = (Int32)gotKey;
-                //MessageBox.Show(num.ToString("X"));
-            }*/
         }
         private void setOverlayDistance(int number)
         {
@@ -477,7 +419,10 @@ namespace DuOverlay
         //Update UI for settings
         public void closeSettings(bool shouldUpdate)
         {
+            //Disable button recording possibility
             settings = null;
+
+            //Check if user used save settings or just closed window
             if (!shouldUpdate)
                 return;
 
@@ -497,9 +442,9 @@ namespace DuOverlay
             }
         }
 
+        //Remove keyboardhooks
         public void OnApplicationExit()
         {
-            //keyboardHook.KeyDown -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
             keyboardHook.KeyUp -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyUp);
             keyboardHook.Uninstall();
         }

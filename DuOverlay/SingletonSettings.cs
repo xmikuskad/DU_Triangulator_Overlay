@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 
 namespace DuOverlay
@@ -43,6 +41,7 @@ namespace DuOverlay
                 return instance;
             }
         }
+
         public void updateSettings()
         {
             if (File.Exists(PATH))
@@ -51,7 +50,7 @@ namespace DuOverlay
                 { 
                     loadSettings();
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     MessageBox.Show("Settings file corrupted, reverting to default!","ERROR",MessageBoxButton.OK,MessageBoxImage.Error);
                     createSettingsFile();
@@ -127,7 +126,6 @@ namespace DuOverlay
                 }
             }
         }
-    
     
         //Getters
         public DISPLAY_MODES getDisplayMode() { return displayMode; }
