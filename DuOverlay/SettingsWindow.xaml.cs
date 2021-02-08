@@ -19,8 +19,9 @@ namespace DuOverlay
         const string NONE_TEXT = "None";
 
         MainWindow mainWindow;
-
         ToggleButton recordingBtn = null;
+
+        bool shouldUpdate = false;
 
         public SettingsWindow(MainWindow mainWindow1)
         {
@@ -33,7 +34,7 @@ namespace DuOverlay
             this.Closed += (sender, e) =>
             {
                 //TODO
-                mainWindow.closeSettings();
+                mainWindow.closeSettings(shouldUpdate);
             };
         }
 
@@ -63,7 +64,9 @@ namespace DuOverlay
             if (key.ToString().Equals(NONE_KEY))
                 return NONE_TEXT;
             else
-                return key.ToString();
+            {
+                return key.ToString().Replace("_","__");
+            }
         }
 
         private KeyboardHook.VKeys getKeyFromString(string key)
@@ -71,7 +74,9 @@ namespace DuOverlay
             if (key.Equals(NONE_TEXT) || key.Equals("Press KEY")) //This is error which needs to be fixed
                 return 0;
             else
-                return (KeyboardHook.VKeys)Enum.Parse(typeof(KeyboardHook.VKeys), key); ;
+            {
+                return (KeyboardHook.VKeys)Enum.Parse(typeof(KeyboardHook.VKeys), key.Replace("__", "_"));
+            }
         }
 
         public void shortcutCheckboxChanged(object sender, RoutedEventArgs e)
@@ -157,6 +162,8 @@ namespace DuOverlay
 
                 SingletonSettings.Instance.saveSettings(overlayCheckbox.IsChecked.Value, mode, shortcutCheckbox.IsChecked.Value,
                     onOffKey, nextPosKey, nextDisKey, resultKey);
+
+                shouldUpdate = true;
 
             }
             catch(Exception)

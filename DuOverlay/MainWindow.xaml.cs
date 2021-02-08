@@ -475,9 +475,12 @@ namespace DuOverlay
         }
 
         //Update UI for settings
-        public void closeSettings()
+        public void closeSettings(bool shouldUpdate)
         {
             settings = null;
+            if (!shouldUpdate)
+                return;
+
             if (SingletonSettings.Instance.shouldUseOverlay())
             {
                 if (overlay == null)
