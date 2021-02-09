@@ -56,11 +56,12 @@ namespace DuOverlay
         //Set overlay position - dynamic TODO
         private void setUpPositions()
         {
-            Canvas.SetLeft(canvas1, 100);
+            /*Canvas.SetLeft(canvas1, 100);
             Canvas.SetLeft(canvas2, 100);
             Canvas.SetLeft(canvas3, 100);
             Canvas.SetLeft(canvas4, 100);
-            Canvas.SetLeft(canvas5, 100);
+            Canvas.SetLeft(canvas5, 100);*/
+            Canvas.SetLeft(canvasHolder, 100);
         }
 
         //Called when position button is pressed
@@ -173,6 +174,7 @@ namespace DuOverlay
             {
                 resultBtn.Background = Brushes.Green;
             }
+            setFocusToDual();
         }
     }
 }

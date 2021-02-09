@@ -15,9 +15,8 @@
             <MenuItem Header="_Settings" FontSize="15" Height="25">
                 <MenuItem Header="_Open settings" Click="showSettings"/>
             </MenuItem>
-            <MenuItem Header="_About" FontSize="15" Height="25">
-                <MenuItem Header="_Help" Click="openHelp"/>
-                <MenuItem Header="_About"/>
+            <MenuItem Header="_Help" FontSize="15" Height="25">
+                <MenuItem Header="_Open help" Click="openHelp"/>
             </MenuItem>
         </Menu>
         <Canvas>

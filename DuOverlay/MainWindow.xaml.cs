@@ -12,6 +12,7 @@ namespace DuOverlay
     {
         Overlay overlay;
         SettingsWindow settings;
+        HelpWindow help;
         KeyboardHook keyboardHook;
         Solver solver;
         ImageProcessing imageProcessing;
@@ -321,18 +322,11 @@ namespace DuOverlay
             resultBox.Text = result;
         }
 
+        //Called after clicking open help btn
         public void openHelp(object sender, RoutedEventArgs e)
         {
-            //TODO make window
-            //Triggers antivirus warnings
-            /*try
-            {
-                Process.Start("notepad.exe", "help.txt");
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("Couldn`t open help! Check file help.txt in application folder.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-            }*/
+            help = new HelpWindow();
+            help.ShowDialog();
         }
 
 
