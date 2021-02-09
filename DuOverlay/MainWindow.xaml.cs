@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
@@ -207,33 +208,52 @@ namespace DuOverlay
 
         public void calculateDistanceImage(object sender, RoutedEventArgs e)
         {
-            Bitmap image = new Bitmap((int)Math.Floor(SystemParameters.PrimaryScreenWidth), (int)Math.Floor(SystemParameters.PrimaryScreenHeight));
-            Graphics graphics = Graphics.FromImage(image as System.Drawing.Image);
-            graphics.CopyFromScreen(0, 0, 0, 0, image.Size);
+            if (Clipboard.ContainsImage())
+            {
+                var btn = sender as Button;
+                String code = btn.Tag.ToString();
 
-            var btn = sender as Button;
-            String code = btn.Tag.ToString();
+                System.Windows.Media.Imaging.BitmapSource imageClipboard = Clipboard.GetImage();
+                Bitmap image = getBitmapFromSource(imageClipboard);
 
-            if (code.Equals("1"))
-            {
-                changeOreDistText(dist1, image, true);
+                if (code.Equals("1"))
+                {
+                    changeOreDistText(dist1, image, true);
+                }
+                if (code.Equals("2"))
+                {
+                    changeOreDistText(dist2, image, true);
+                }
+                if (code.Equals("3"))
+                {
+                    changeOreDistText(dist3, image, true);
+                }
+                if (code.Equals("4"))
+                {
+                    changeOreDistText(dist4, image, true);
+                }
             }
-            if (code.Equals("2"))
+            else
             {
-                changeOreDistText(dist2, image, true);
-            }
-            if (code.Equals("3"))
-            {
-                changeOreDistText(dist3, image, true);
-            }
-            if (code.Equals("4"))
-            {
-                changeOreDistText(dist4, image, true);
+                MessageBox.Show("You need to have screenshot in clipboard!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
-            //Garbage collector is too slow
-            image.Dispose();
-            graphics.Dispose();
+        }
+
+        private Bitmap getBitmapFromSource(System.Windows.Media.Imaging.BitmapSource source)
+        {
+            Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(
+              new Rectangle(System.Drawing.Point.Empty, bmp.Size),
+              ImageLockMode.WriteOnly,
+              PixelFormat.Format32bppPArgb);
+            source.CopyPixels(
+              Int32Rect.Empty,
+              data.Scan0,
+              data.Height * data.Stride,
+              data.Stride);
+            bmp.UnlockBits(data);
+            return bmp;
         }
 
         public void changeOreDistText(TextBox tb,Bitmap image, bool showWarning)
